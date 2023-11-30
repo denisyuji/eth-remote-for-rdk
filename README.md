@@ -4,7 +4,7 @@ This is a VERY simple application to emulate the remote control commands of RDK 
 
 # Pre-requisites: #
 
-Before start, please ensure you are able to connect to a RDK device on a given IP address and port.
+Before start, please ensure you know your device's IP and API port (default is 9998).
 
 # How to use it #
 
@@ -19,6 +19,7 @@ positional arguments:
 
 options:
   -h, --help   show this help message and exit
+  --port PORT  RDK's Port number to connect (Default: 9998)
 ```
 
 After starting the script, click on the shell and the following keys will be able to control RDK as a remote:
