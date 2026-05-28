@@ -2,6 +2,7 @@ import curses
 import requests
 import json
 import argparse
+import shlex
 
 def ascii_to_vk(code):
 	# Map ASCII codes to virtual-key codes
@@ -61,10 +62,25 @@ def main(stdscr):
 							"keyCode": virtual_keycode
 						}
 					}
-					response = requests.post('http://'+RDK_IP+'/jsonrpc', headers=headers, data=json.dumps(data))
+					request_json = json.dumps(data)
+					url = 'http://' + RDK_IP + '/jsonrpc'
+					curl_example = (
+						'curl -sS -X POST '
+						+ shlex.quote(url)
+						+ ' -H '
+						+ shlex.quote('Content-Type: application/json')
+						+ ' -d '
+						+ shlex.quote(request_json)
+					)
+					response = requests.post(url, headers=headers, data=request_json)
 
-					# Print response
-					stdscr.addstr(str(response.json()))
+					try:
+						stdscr.addstr('\nRequest: ' + request_json + '\n')
+						stdscr.addstr('curl: ' + curl_example + '\n')
+						stdscr.addstr('Response: ' + str(response.json()))
+					except curses.error:
+						pass
+					stdscr.refresh()
 
 parser = argparse.ArgumentParser(description="Keyboard for RDK")
 parser.add_argument('IP', help='The RDK IP (mandatory). Ex: python3 rdk-keyboard.py 192.168.0.200', type=str)
